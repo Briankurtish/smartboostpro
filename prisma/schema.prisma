@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+// User model
+model User {
+  id        Int      @id @default(autoincrement())
+  firstName String
+  lastName  String
+  email     String   @unique
+  status    UserStatus
+  deposits  Deposit[]
+  withdrawals Withdrawal[]
+  orders    Order[]
+  subscriptions Subscription[]
+}
+
+// Enum for user status
+enum UserStatus {
+  active
+  inactive
+}
+
+// Product model
+model Product {
+  id          Int      @id @default(autoincrement())
+  productName String
+  productImage String
+  description String
+  price       Float
+  commission  Float
+  superBonus  SuperBonus
+  orders      Order[]
+}
+
+// Enum for super bonus
+enum SuperBonus {
+  yes
+  no
+}
+
+// Plan model
+model Plan {
+  id          Int      @id @default(autoincrement())
+  planName    String
+  price       Float
+  description String
+  subscriptions Subscription[]
+}
+
+// Deposit model
+model Deposit {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  amount        Float
+  cryptocurrency String
+  status        DepositStatus
+  dateTime      DateTime @default(now())
+  
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+// Enum for deposit status
+enum DepositStatus {
+  pending
+  accepted
+  cancelled
+}
+
+// Withdrawal model
+model Withdrawal {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  amount        Float
+  cryptocurrency String
+  status        WithdrawalStatus
+  dateTime      DateTime @default(now())
+  
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+// Enum for withdrawal status
+enum WithdrawalStatus {
+  pending
+  accepted
+  cancelled
+}
+
+// Order model
+model Order {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  productId       Int
+  productPrice    Float
+  productCommission Float
+  dateTime        DateTime @default(now())
+  
+  user            User     @relation(fields: [userId], references: [id])
+  product         Product  @relation(fields: [productId], references: [id])
+}
+
+// Subscription model for user subscriptions to plans
+model Subscription {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  planId    Int
+  startDate DateTime @default(now())
+  endDate   DateTime?
+
+  user      User     @relation(fields: [userId], references: [id])
+  plan      Plan     @relation(fields: [planId], references: [id])
+}

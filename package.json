@@ -22,16 +22,19 @@
     "@mui/lab": "5.0.0-alpha.170",
     "@mui/material": "^5.15.19",
     "@mui/material-nextjs": "^5.15.11",
+    "@prisma/client": "^5.21.1",
     "apexcharts": "^3.49.1",
     "classnames": "^2.5.1",
     "lucide-react": "^0.453.0",
     "next": "^14.2.3",
+    "prisma": "^5.21.1",
     "react": "^18.3.1",
     "react-apexcharts": "^1.4.1",
     "react-dom": "^18.3.1",
     "react-perfect-scrollbar": "^1.5.8",
     "react-use": "^17.5.0",
-    "server-only": "^0.0.1"
+    "server-only": "^0.0.1",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.218",
@@ -65,5 +68,8 @@
   "overrides": {
     "react": "^18.3.1",
     "rimraf": "^5.0.7"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }

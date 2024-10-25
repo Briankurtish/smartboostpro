@@ -20,13 +20,15 @@ import CardTwitter from '@views/card-basic/CardTwitter'
 import CardFacebook from '@views/card-basic/CardFacebook'
 import CardLinkedIn from '@views/card-basic/CardLinkedIn'
 import { Button } from '@mui/material'
+import Modal from '@/components/FormModal'
+import { useState } from 'react'
 
 const ManagePlansPage = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Typography variant='h3'>Manage Plans</Typography>
-        <Button size='small' variant='contained' className='mb-2 mt-2'>
+        <Button size='small' variant='contained' className='mb-2 mt-2' href='/list/manage-plans/add-new-plan'>
           Add New Plan
         </Button>
         <Divider />

@@ -1,3 +1,4 @@
+'use client'
 // MUI Imports
 import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
@@ -11,7 +12,9 @@ import CustomAvatar from '@core/components/mui/Avatar'
 
 // Styles Imports
 import tableStyles from '@core/styles/table.module.css'
-import { Button } from '@mui/material'
+import { Button, IconButton } from '@mui/material'
+import { useState } from 'react'
+import Modal from '@/components/PopupModal'
 
 type TableBodyRowType = {
   avatarSrc?: string
@@ -118,6 +121,10 @@ const rowsData: TableBodyRowType[] = [
 ]
 
 const ManageWithdrawalsTable = () => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+
+  const openModal = () => setIsModalOpen(true)
+  const closeModal = () => setIsModalOpen(false)
   return (
     <Card>
       <Typography variant='h5' className='p-4 font-bold'>
@@ -172,13 +179,16 @@ const ManageWithdrawalsTable = () => {
                   />
                 </td>
                 <td className='!plb-1'>
-                  <i className={classnames('ri-delete-bin-line', 'text-[20px] text-error')} />
+                  <IconButton>
+                    <i className='ri-delete-bin-line text-error' onClick={openModal} />
+                  </IconButton>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <Modal isOpen={isModalOpen} onClose={closeModal} />
     </Card>
   )
 }

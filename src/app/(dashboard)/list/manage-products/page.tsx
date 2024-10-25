@@ -1,3 +1,4 @@
+'use client'
 // MUI Imports
 import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
@@ -11,7 +12,9 @@ import CustomAvatar from '@core/components/mui/Avatar'
 
 // Styles Imports
 import tableStyles from '@core/styles/table.module.css'
-import { Button } from '@mui/material'
+import { Button, IconButton } from '@mui/material'
+import { useState } from 'react'
+import Modal from '@/components/PopupModal'
 
 type TableBodyRowType = {
   avatarSrc?: string
@@ -91,9 +94,13 @@ const rowsData: TableBodyRowType[] = [
 ]
 
 const ManageProductTable = () => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+
+  const openModal = () => setIsModalOpen(true)
+  const closeModal = () => setIsModalOpen(false)
   return (
     <Card>
-      <Button size='small' variant='contained' className='m-2' href='/admin/add-product'>
+      <Button size='small' variant='contained' className='m-2' href='/list/manage-products/add-new-product'>
         Add New Product
       </Button>
       <div className='overflow-x-auto'>
@@ -144,15 +151,20 @@ const ManageProductTable = () => {
                   />
                 </td>
                 <td className='!plb-1'>
-                  <i className={classnames('ri-edit-line', 'text-[20px] text-info mr-5')} />
+                  <a href='/list/manage-products/edit-product'>
+                    <i className={classnames('ri-edit-line', 'text-[20px] text-info mr-5')} />
+                  </a>
 
-                  <i className={classnames('ri-delete-bin-line', 'text-[20px] text-error')} />
+                  <IconButton>
+                    <i className='ri-delete-bin-line text-error' onClick={openModal} />
+                  </IconButton>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <Modal isOpen={isModalOpen} onClose={closeModal} />
     </Card>
   )
 }

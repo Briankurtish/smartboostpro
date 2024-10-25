@@ -145,9 +145,11 @@ const Table = () => {
                   />
                 </td>
                 <td className='!plb-1'>
-                  <i className={classnames('ri-edit-line', 'text-[20px] text-info mr-5')} />
+                  <a href='/list/users/edit-user'>
+                    <i className={classnames('ri-edit-line', 'text-[20px] text-info mr-5')} />
+                  </a>
 
-                  <i className={classnames('ri-delete-bin-line', 'text-[20px] text-error')} />
+                  <i className={classnames('ri-delete-bin-line', 'text-[18px] text-error')} />
                 </td>
               </tr>
             ))}

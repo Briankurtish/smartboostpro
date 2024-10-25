@@ -14,8 +14,13 @@ import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import Modal from '@/components/PopupModal'
 
 const CardMobile = () => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+
+  const openModal = () => setIsModalOpen(true)
+  const closeModal = () => setIsModalOpen(false)
   // States
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
 
@@ -53,13 +58,16 @@ const CardMobile = () => {
             </div>
           </CardContent>
           <CardActions className='justify-between card-actions-dense'>
-            <Button startIcon={<i className='ri-edit-line' />}>Edit Plan</Button>
+            <Button startIcon={<i className='ri-edit-line' />} href='/list/manage-plans/edit-plan'>
+              Edit Plan
+            </Button>
             <IconButton>
-              <i className='ri-delete-bin-line text-error' />
+              <i className='ri-delete-bin-line text-error' onClick={openModal} />
             </IconButton>
           </CardActions>
         </Grid>
       </Grid>
+      <Modal isOpen={isModalOpen} onClose={closeModal} />
     </Card>
   )
 }

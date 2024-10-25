@@ -20,28 +20,16 @@ const AdminDashBoard = () => {
       <Grid item xs={12} md={8} lg={8}>
         <Transactions />
       </Grid>
-      <Grid item xs={12} md={6} lg={4}>
-        <WeeklyOverview />
-      </Grid>
-      <Grid item xs={12} md={6} lg={4}>
-        <TotalEarning />
-      </Grid>
+
       <Grid item xs={12} md={6} lg={4}>
         <Grid container spacing={6}>
           <Grid item xs={12} sm={6}>
             <LineChart />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <CardStatVertical
-              title='Total Profit'
-              stats='$25.6k'
-              avatarIcon='ri-pie-chart-2-line'
-              avatarColor='secondary'
-              subtitle='Weekly Profit'
-              trendNumber='42%'
-              trend='positive'
-            />
+            <LineChart />
           </Grid>
+
           <Grid item xs={12} sm={6}>
             <CardStatVertical
               stats='862'
@@ -53,10 +41,15 @@ const AdminDashBoard = () => {
               avatarIcon='ri-file-word-2-line'
             />
           </Grid>
+
           <Grid item xs={12} sm={6}>
             <DistributedColumnChart />
           </Grid>
         </Grid>
+      </Grid>
+
+      <Grid item xs={12} md={6} lg={4}>
+        <WeeklyOverview />
       </Grid>
 
       <Grid item xs={12}>

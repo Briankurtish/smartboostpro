@@ -11,12 +11,14 @@ const LineChart = () => {
   return (
     <Card>
       <CardContent>
-        <Typography variant='h4'>Tasks</Typography>
-        <Typography color='text.primary' className='font-medium pb-6 pt-2'>
-          Perform Tasks today to earn
+        <Typography variant='h6' className='font-bold'>
+          Pending Deposits
+        </Typography>
+        <Typography variant='h4' color='primary' className='font-medium pb-6 pt-2'>
+          23.4K
         </Typography>
         <Button size='small' variant='contained'>
-          Go to Tasks
+          Deposit Requests
         </Button>
       </CardContent>
     </Card>

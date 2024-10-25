@@ -68,8 +68,20 @@ const VerticalMenu = ({ scrollMenu }: { scrollMenu: (container: any, isPerfectSc
       roles: ['admin'] // Role restricted
     },
     {
+      Icon: 'ri-bell-line',
+      label: 'Deposit Requests',
+      href: '',
+      roles: ['admin'] // Role restricted
+    },
+    {
       Icon: 'ri-dashboard-line',
       label: 'Manage Deposits',
+      href: '',
+      roles: ['admin'] // Role restricted
+    },
+    {
+      Icon: 'ri-bell-line',
+      label: 'Withdrawal Requests',
       href: '',
       roles: ['admin'] // Role restricted
     },

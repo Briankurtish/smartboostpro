@@ -40,10 +40,10 @@ const CardMobile = () => {
         <Grid item xs={12} md={7} className='md:border-is border-bs md:border-bs-0'>
           <CardContent>
             <Typography variant='h5' className='mbe-2'>
-              Apple iPhone 11 Pro
+              Classic Plan
             </Typography>
             <Typography className='mbe-2'>
-              Apple iPhone 11 Pro smartphone. Announced Sep 2019. Features 5.8″ display Apple A13 Bionic
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro architecto iure excepturi.
             </Typography>
             <div className='flex gap-1'>
               <Typography color='text.primary'>Price:</Typography>
@@ -53,34 +53,10 @@ const CardMobile = () => {
             </div>
           </CardContent>
           <CardActions className='justify-between card-actions-dense'>
-            <Button startIcon={<i className='ri-shopping-cart-2-line' />}>Add to Cart</Button>
-            <IconButton
-              id='share-button'
-              aria-haspopup='true'
-              {...(open && { 'aria-expanded': true, 'aria-controls': 'share-menu' })}
-              onClick={handleClick}
-            >
-              <i className='ri-share-line' />
+            <Button startIcon={<i className='ri-edit-line' />}>Edit Plan</Button>
+            <IconButton>
+              <i className='ri-delete-bin-line text-error' />
             </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={open}
-              MenuListProps={{ 'aria-labelledby': 'share-button' }}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>
-                <i className='ri-facebook-fill text-xl' />
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <i className='ri-twitter-fill text-xl' />
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <i className='ri-linkedin-fill text-xl' />
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <i className='ri-google-fill text-xl' />
-              </MenuItem>
-            </Menu>
           </CardActions>
         </Grid>
       </Grid>

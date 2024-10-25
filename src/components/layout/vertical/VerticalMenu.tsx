@@ -64,31 +64,31 @@ const VerticalMenu = ({ scrollMenu }: { scrollMenu: (container: any, isPerfectSc
     {
       Icon: 'ri-user-line',
       label: 'Users',
-      href: '',
+      href: '/list/users',
       roles: ['admin'] // Role restricted
     },
     {
       Icon: 'ri-bell-line',
       label: 'Deposit Requests',
-      href: '',
+      href: '/list/deposit-request',
       roles: ['admin'] // Role restricted
     },
     {
       Icon: 'ri-dashboard-line',
       label: 'Manage Deposits',
-      href: '',
+      href: '/list/manage-deposits',
       roles: ['admin'] // Role restricted
     },
     {
       Icon: 'ri-bell-line',
       label: 'Withdrawal Requests',
-      href: '',
+      href: '/list/withdrawal-request',
       roles: ['admin'] // Role restricted
     },
     {
       Icon: 'ri-dashboard-line',
       label: 'Manage Withdrawals',
-      href: '',
+      href: '/list/manage-withdrawals',
       roles: ['admin'] // Role restricted
     },
     {
@@ -122,13 +122,13 @@ const VerticalMenu = ({ scrollMenu }: { scrollMenu: (container: any, isPerfectSc
     {
       Icon: 'ri-dashboard-line',
       label: 'Manage Plans',
-      href: '',
+      href: '/list/manage-plans',
       roles: ['admin'] // Role restricted
     },
     {
       Icon: 'ri-dashboard-line',
       label: 'Manage Products',
-      href: '',
+      href: '/list/manage-products',
       roles: ['admin'] // Role restricted
     },
     {
@@ -155,7 +155,7 @@ const VerticalMenu = ({ scrollMenu }: { scrollMenu: (container: any, isPerfectSc
     {
       Icon: 'ri-settings-line',
       label: 'Settings',
-      href: '',
+      href: '/settings',
       roles: ['admin'] // Role restricted
     },
     {

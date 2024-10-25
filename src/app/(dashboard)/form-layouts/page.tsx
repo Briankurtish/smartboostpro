@@ -6,7 +6,7 @@ import FormLayoutsBasic from '@views/form-layouts/FormLayoutsBasic'
 import FormLayoutsIcon from '@views/form-layouts/FormLayoutsIcons'
 import FormLayoutsAlignment from '@views/form-layouts/FormLayoutsAlignment'
 
-const FormLayouts = () => {
+const ProductForm = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12} md={6}>
@@ -22,4 +22,4 @@ const FormLayouts = () => {
   )
 }
 
-export default FormLayouts
+export default ProductForm

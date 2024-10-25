@@ -1,49 +1,29 @@
-// MUI Imports
-import Grid from '@mui/material/Grid'
+// dashboard/page.tsx
+'use client'
 
-// Components Imports
-import DepositWithdraw from '@views/dashboard/DepositWithdraw'
+import { useUser } from '@clerk/nextjs'
+import { useEffect, useState } from 'react'
+import AdminDashboard from '@/components/AdminDashboard'
+import UserDashboard from '@/components/UserDashboard'
 
-import Table from '@views/dashboard/Table'
-import UserBalanceCard from '@/views/dashboard/UserBalance'
-import TotalProfitCard from '@/views/dashboard/TotalProfit'
-import ActivePlanCard from '@/views/dashboard/ActivePlan'
-import GoToTasksCard from '@/views/dashboard/GoToTasksCard'
-import ClicksLeftCard from '@/views/dashboard/ClicksLeftCard'
+const DashboardPage = () => {
+  const { user } = useUser()
+  const [role, setRole] = useState<string | null | undefined>(null)
 
-const UserDashBoard = () => {
-  return (
-    <Grid container spacing={6}>
-      <Grid item xs={12} md={4}>
-        <UserBalanceCard />
-      </Grid>
-      <Grid item xs={12} md={4}>
-        <TotalProfitCard />
-      </Grid>
-      <Grid item xs={12} md={4}>
-        <ActivePlanCard />
-      </Grid>
+  useEffect(() => {
+    if (user) {
+      const userRole = (user.publicMetadata as { role?: string | null | undefined })?.role
+      setRole(userRole)
+    }
+  }, [user])
 
-      <Grid item xs={12} md={6} lg={4}>
-        <Grid container spacing={6}>
-          <Grid item xs={12} sm={6}>
-            <GoToTasksCard />
-          </Grid>
+  // Render loading or a message if the role hasn't loaded
+  if (role === null) {
+    return <p>Loading...</p>
+  }
 
-          <Grid item xs={12} sm={6}>
-            <ClicksLeftCard />
-          </Grid>
-        </Grid>
-      </Grid>
-
-      <Grid item xs={12} lg={8}>
-        <DepositWithdraw />
-      </Grid>
-      <Grid item xs={12}>
-        <Table />
-      </Grid>
-    </Grid>
-  )
+  // Default to UserDashboard if the role is undefined, empty, or any value other than "admin"
+  return <>{role === 'admin' ? <AdminDashboard /> : <UserDashboard />}</>
 }
 
-export default UserDashBoard
+export default DashboardPage

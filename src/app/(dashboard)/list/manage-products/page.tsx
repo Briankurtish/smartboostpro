@@ -93,7 +93,7 @@ const rowsData: TableBodyRowType[] = [
 const ManageProductTable = () => {
   return (
     <Card>
-      <Button size='small' variant='contained' className='m-2'>
+      <Button size='small' variant='contained' className='m-2' href='/admin/add-product'>
         Add New Product
       </Button>
       <div className='overflow-x-auto'>

@@ -12,152 +12,118 @@ import CustomAvatar from '@core/components/mui/Avatar'
 // Styles Imports
 import tableStyles from '@core/styles/table.module.css'
 import { Button } from '@mui/material'
+import { Prisma, PrismaClient, Subscription, User } from '@prisma/client'
+import Table from '@/components/Table'
 
-type TableBodyRowType = {
-  avatarSrc?: string
-  name: string
-  email: string
-  iconClass: string
-  roleIcon?: string
-  plan: string
-  status: string
+type UserList = User & {
+  subscriptions: {
+    plan: {
+      planName: string
+    }
+  }[]
 }
+const prisma = new PrismaClient()
 
-// Vars
-const rowsData: TableBodyRowType[] = [
+const columns = [
   {
-    avatarSrc: '/images/avatars/1.png',
-    name: 'Jordan Stevenson',
-    email: 'Jacinthe_Blick@hotmail.com',
-    iconClass: 'text-info',
-    roleIcon: 'ri-pie-chart-2-line',
-    plan: 'Classic',
-    status: 'inactive'
+    header: 'User',
+    accessor: 'user'
   },
   {
-    avatarSrc: '/images/avatars/2.png',
-    name: 'Richard Payne',
-    email: 'Jaylon_Bartell3@gmail.com',
-    iconClass: 'text-warning',
-    roleIcon: 'ri-vip-crown-line',
-    plan: 'VIP',
-    status: 'active'
+    header: 'Email',
+    accessor: 'email'
   },
   {
-    avatarSrc: '/images/avatars/3.png',
-    name: 'Jennifer Summers',
-    email: 'Tristin_Johnson@gmail.com',
-    iconClass: 'text-primary',
-    roleIcon: 'ri-computer-line',
-    plan: 'Semi-Pro',
-    status: 'active'
+    header: 'Plan',
+    accessor: 'plan'
   },
   {
-    avatarSrc: '/images/avatars/4.png',
-    name: 'Mr. Justin Richardson',
-    email: 'Toney21@yahoo.com',
-    iconClass: 'text-info',
-    roleIcon: 'ri-pie-chart-2-line',
-    plan: 'Classic',
-    status: 'inactive'
+    header: 'Status',
+    accessor: 'status'
   },
   {
-    avatarSrc: '/images/avatars/5.png',
-    name: 'Nicholas Tanner',
-    email: 'Hunter_Kuhic68@hotmail.com',
-    iconClass: 'text-warning',
-    roleIcon: 'ri-vip-crown-line',
-    plan: 'VIP',
-    status: 'active'
-  },
-  {
-    avatarSrc: '/images/avatars/6.png',
-    name: 'Crystal Mays',
-    email: 'Norene_Bins@yahoo.com',
-    iconClass: 'text-info',
-    roleIcon: 'ri-pie-chart-2-line',
-    plan: 'Classic',
-    status: 'active'
-  },
-  {
-    avatarSrc: '/images/avatars/7.png',
-    name: 'Mary Garcia',
-    email: 'Emmitt.Walker14@hotmail.com',
-    iconClass: 'text-primary',
-    roleIcon: 'ri-computer-line',
-    plan: 'Semi-Pro',
-    status: 'inactive'
-  },
-  {
-    avatarSrc: '/images/avatars/8.png',
-    name: 'Megan Roberts',
-    email: 'Patrick.Howe73@gmail.com',
-    iconClass: 'text-info',
-    roleIcon: 'ri-pie-chart-2-line',
-    plan: 'Classic',
-    status: 'active'
+    header: 'Actions',
+    accessor: 'action'
   }
 ]
 
-const Table = () => {
+const UserListPage = async () => {
+  const query: Prisma.UserWhereInput = {}
+
+  const [data, count] = await prisma.$transaction([
+    prisma.user.findMany({
+      where: query,
+      include: {
+        subscriptions: {
+          include: {
+            plan: {
+              select: {
+                planName: true // Fetching the planName from the Plan model
+              }
+            }
+          }
+        }
+      }
+    }),
+    prisma.user.count({
+      where: query
+    })
+  ])
+
+  // Map the data to include the plan name in the user object
+  const formattedData = data.map(user => ({
+    ...user,
+    plan: user.subscriptions.length > 0 ? user.subscriptions[0].plan.planName : 'No Plan' // Adjust this logic as needed
+  }))
+
   return (
     <Card>
       <div className='overflow-x-auto'>
-        <table className={tableStyles.table}>
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Email</th>
-              <th>Plan</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rowsData.map((row, index) => (
-              <tr key={index}>
-                <td className='!plb-1'>
-                  <div className='flex items-center gap-3'>
-                    <CustomAvatar src={row.avatarSrc} size={34} />
-                    <div className='flex flex-col'>
-                      <Typography color='text.primary' className='font-medium'>
-                        {row.name}
-                      </Typography>
-                    </div>
-                  </div>
-                </td>
-                <td className='!plb-1'>
-                  <Typography>{row.email}</Typography>
-                </td>
-                <td className='!plb-1'>
-                  <div className='flex gap-2'>
-                    <i className={classnames(row.roleIcon, row.iconClass, 'text-[22px]')} />
-                    <Typography color='text.primary'>{row.plan}</Typography>
-                  </div>
-                </td>
-                <td className='!pb-1'>
-                  <Chip
-                    className='capitalize'
-                    variant='tonal'
-                    color={row.status === 'pending' ? 'warning' : row.status === 'inactive' ? 'secondary' : 'success'}
-                    label={row.status}
-                    size='small'
-                  />
-                </td>
-                <td className='!plb-1'>
-                  <a href='/list/users/edit-user'>
-                    <i className={classnames('ri-edit-line', 'text-[20px] text-info mr-5')} />
-                  </a>
-
-                  <i className={classnames('ri-delete-bin-line', 'text-[18px] text-error')} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <Table columns={columns} renderRow={renderRow} data={formattedData} />
       </div>
     </Card>
   )
 }
 
-export default Table
+const renderRow = (item: UserList) => (
+  <tr key={item.id}>
+    <td className='!plb-1'>
+      <div className='flex items-center gap-3'>
+        <div className='flex flex-col'>
+          <Typography color='text.primary' className='font-medium'>
+            {item.firstName + ' ' + item.lastName}
+          </Typography>
+        </div>
+      </div>
+    </td>
+    <td className='!plb-1'>
+      <Typography>{item.email}</Typography>
+    </td>
+    <td className='!plb-1'>
+      <div className='flex gap-2'>
+        {/* <i className={classnames(row.roleIcon, row.iconClass, 'text-[22px]')} /> */}
+        <Typography color='text.primary'>
+          {item.subscriptions.length > 0 ? item.subscriptions[0].plan.planName : 'No Plan'}
+        </Typography>
+      </div>
+    </td>
+    <td className='!pb-1'>
+      <Chip
+        className='capitalize'
+        variant='tonal'
+        color={item.status === 'inactive' ? 'warning' : 'success'}
+        label={item.status}
+        size='small'
+      />
+    </td>
+    <td className='!plb-1'>
+      <a href='/list/users/edit-user'>
+        <i className={classnames('ri-edit-line', 'text-[20px] text-info mr-5')} />
+      </a>
+
+      <i className={classnames('ri-delete-bin-line', 'text-[18px] text-error')} />
+    </td>
+  </tr>
+)
+
+export default UserListPage

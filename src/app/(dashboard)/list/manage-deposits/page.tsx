@@ -117,10 +117,6 @@ const renderRow = (item: DepositList) => (
       />
     </td>
     <td className='!plb-1'>
-      <a href='/list/users/edit-user'>
-        <i className={classnames('ri-edit-line', 'text-[20px] text-info mr-5')} />
-      </a>
-
       <i className={classnames('ri-delete-bin-line', 'text-[18px] text-error')} />
     </td>
   </tr>

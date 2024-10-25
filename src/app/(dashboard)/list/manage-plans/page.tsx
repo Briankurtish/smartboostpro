@@ -1,58 +1,99 @@
 // MUI Imports
-import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import Divider from '@mui/material/Divider'
+import Card from '@mui/material/Card'
+import Chip from '@mui/material/Chip'
+
+// Third-party Imports
+import classnames from 'classnames'
 
 // Components Imports
-import CardInfluencingInfluencerWithImg from '@views/card-basic/CardInfluencingInfluencerWithImg'
-import CardUser from '@views/card-basic/CardUser'
-import CardWithCollapse from '@views/card-basic/CardWithCollapse'
-import CardMobile from '@views/card-basic/CardMobile'
-import CardHorizontalRatings from '@views/card-basic/CardHorizontalRatings'
-import CardWatch from '@views/card-basic/CardWatch'
-import CardLifetimeMembership from '@views/card-basic/CardLifetimeMembership'
-import CardInfluencingInfluencer from '@views/card-basic/CardInfluencingInfluencer'
-import CardVerticalRatings from '@views/card-basic/CardVerticalRatings'
-import CardSupport from '@views/card-basic/CardSupport'
-import CardWithTabs from '@views/card-basic/CardWithTabs'
-import CardWithTabsCenter from '@views/card-basic/CardWithTabsCenter'
-import CardTwitter from '@views/card-basic/CardTwitter'
-import CardFacebook from '@views/card-basic/CardFacebook'
-import CardLinkedIn from '@views/card-basic/CardLinkedIn'
-import { Button } from '@mui/material'
-import Modal from '@/components/FormModal'
-import { useState } from 'react'
+import CustomAvatar from '@core/components/mui/Avatar'
 
-const ManagePlansPage = () => {
+// Styles Imports
+import tableStyles from '@core/styles/table.module.css'
+import { Button } from '@mui/material'
+import { Deposit, Plan, Prisma, PrismaClient, Subscription, User } from '@prisma/client'
+import Table from '@/components/Table'
+
+type PlanList = Plan
+const prisma = new PrismaClient()
+
+const columns = [
+  {
+    header: 'Title',
+    accessor: 'title'
+  },
+  {
+    header: 'Description',
+    accessor: 'description'
+  },
+  {
+    header: 'Price',
+    accessor: 'price'
+  },
+  {
+    header: 'Actions',
+    accessor: 'action'
+  }
+]
+
+const PlanListPage = async () => {
+  const query: Prisma.PlanWhereInput = {}
+
+  const [data, count] = await prisma.$transaction([
+    prisma.plan.findMany({
+      where: query
+    }),
+    prisma.plan.count({
+      where: query
+    })
+  ])
+
   return (
-    <Grid container spacing={6}>
-      <Grid item xs={12}>
+    <Card>
+      <div className='m-3'>
         <Typography variant='h3'>Manage Plans</Typography>
         <Button size='small' variant='contained' className='mb-2 mt-2' href='/list/manage-plans/add-new-plan'>
           Add New Plan
         </Button>
-        <Divider />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <CardMobile />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <CardMobile />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <CardMobile />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <CardMobile />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <CardMobile />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <CardMobile />
-      </Grid>
-    </Grid>
+      </div>
+
+      <div className='overflow-x-auto'>
+        <Table columns={columns} renderRow={renderRow} data={data} />
+      </div>
+    </Card>
   )
 }
 
-export default ManagePlansPage
+const renderRow = (item: PlanList) => (
+  <tr key={item.id}>
+    <td className='!plb-1'>
+      <div className='flex items-center gap-3'>
+        <div className='flex flex-col'>
+          <Typography color='text.primary' className='font-medium'>
+            {item.planName}
+          </Typography>
+        </div>
+      </div>
+    </td>
+    <td className='!plb-1'>
+      <Typography>{item.description}</Typography>
+    </td>
+    <td className='!plb-1'>
+      <div className='flex gap-2'>
+        {/* <i className={classnames(row.roleIcon, row.iconClass, 'text-[22px]')} /> */}
+        <Typography color='text.primary'>{'$' + item.price}</Typography>
+      </div>
+    </td>
+
+    <td className='!plb-1'>
+      <a href='/list/manage-plans/edit-plan'>
+        <i className={classnames('ri-edit-line', 'text-[20px] text-info mr-5')} />
+      </a>
+
+      <i className={classnames('ri-delete-bin-line', 'text-[18px] text-error')} />
+    </td>
+  </tr>
+)
+
+export default PlanListPage

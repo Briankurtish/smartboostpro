@@ -3,6 +3,15 @@ import { PrismaClient, UserStatus, SuperBonus, DepositStatus, WithdrawalStatus }
 const prisma = new PrismaClient()
 
 async function main() {
+  // Clear existing data
+  await prisma.subscription.deleteMany({})
+  await prisma.order.deleteMany({})
+  await prisma.withdrawal.deleteMany({})
+  await prisma.deposit.deleteMany({})
+  await prisma.product.deleteMany({})
+  await prisma.plan.deleteMany({})
+  await prisma.user.deleteMany({})
+
   // Create users
   const user1 = await prisma.user.create({
     data: {
@@ -78,6 +87,7 @@ async function main() {
       userId: user2.id,
       amount: 200.0,
       cryptocurrency: 'Ethereum',
+      walletAddress: 'Tr36holhshsopducvytr6',
       status: WithdrawalStatus.pending
     }
   })

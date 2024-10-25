@@ -1,4 +1,3 @@
-'use client'
 // MUI Imports
 import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
@@ -12,185 +11,133 @@ import CustomAvatar from '@core/components/mui/Avatar'
 
 // Styles Imports
 import tableStyles from '@core/styles/table.module.css'
-import { Button, IconButton } from '@mui/material'
-import { useState } from 'react'
-import Modal from '@/components/PopupModal'
+import { Button } from '@mui/material'
+import { Deposit, Prisma, PrismaClient, Subscription, User, Withdrawal } from '@prisma/client'
+import Table from '@/components/Table'
 
-type TableBodyRowType = {
-  avatarSrc?: string
-  name: string
-  username: string
-  amount: string
-  address: string
-  iconClass: string
-  roleIcon?: string
-  currency: string
-  status: string
-}
+type WithdrawalList = Withdrawal & { user: User }
+const prisma = new PrismaClient()
 
-// Vars
-const rowsData: TableBodyRowType[] = [
+const columns = [
   {
-    avatarSrc: '/images/avatars/1.png',
-    name: 'Jordan Stevenson',
-    username: '@amiccoo',
-    amount: '$300',
-    address: 'TRS8832GOBO22389Y2ON004',
-    iconClass: 'text-success',
-    roleIcon: 'ri-coin-line',
-    currency: 'USDT',
-    status: 'accepted'
+    header: 'User',
+    accessor: 'user'
   },
   {
-    avatarSrc: '/images/avatars/2.png',
-    name: 'Richard Payne',
-    username: '@brossiter15',
-    amount: '$400',
-    address: 'BCS8832GOBO22389Y2ON004',
-    iconClass: 'text-warning',
-    roleIcon: 'ri-coin-line',
-    currency: 'BTC',
-    status: 'cancelled'
+    header: 'Amount',
+    accessor: 'amount'
   },
   {
-    avatarSrc: '/images/avatars/3.png',
-    name: 'Jennifer Summers',
-    username: '@jsbemblinf',
-    amount: '$260',
-    address: 'TRS8832GOBO22389Y2ON004',
-    iconClass: 'text-success',
-    roleIcon: 'ri-coin-line',
-    currency: 'USDT',
-    status: 'accepted'
+    header: 'Crypto Currency',
+    accessor: 'crypto'
   },
   {
-    avatarSrc: '/images/avatars/4.png',
-    name: 'Mr. Justin Richardson',
-    username: '@justin45',
-    amount: '$900',
-    address: 'TRS8832GOBO22389Y2ON004',
-    iconClass: 'text-success',
-    roleIcon: 'ri-coin-line',
-    currency: 'USDT',
-    status: 'accepted'
+    header: 'Wallet Address',
+    accessor: 'wallet'
   },
   {
-    avatarSrc: '/images/avatars/5.png',
-    name: 'Nicholas Tanner',
-    username: '@tannernic',
-    amount: '$450',
-    address: 'BC58832GOBO22389Y2ON004',
-    iconClass: 'text-warning',
-    roleIcon: 'ri-coin-line',
-    currency: 'BTC',
-    status: 'cancelled'
+    header: 'Date',
+    accessor: 'date'
   },
   {
-    avatarSrc: '/images/avatars/6.png',
-    name: 'Crystal Mays',
-    username: '@crystal99',
-    amount: '$160',
-    address: 'TRS8832GOBO22389Y2ON004',
-    iconClass: 'text-success',
-    roleIcon: 'ri-coin-line',
-    currency: 'USDT',
-    status: 'cancelled'
+    header: 'Status',
+    accessor: 'status'
   },
   {
-    avatarSrc: '/images/avatars/7.png',
-    name: 'Mary Garcia',
-    username: '@marygarcia4',
-    amount: '$390',
-    address: 'BCS8832GOBO22389Y2ON004',
-    iconClass: 'text-warning',
-    roleIcon: 'ri-coin-line',
-    currency: 'BTC',
-    status: 'accepeted'
-  },
-  {
-    avatarSrc: '/images/avatars/8.png',
-    name: 'Megan Roberts',
-    username: '@megan78',
-    amount: '$200',
-    address: 'TRS8832GOBO22389Y2ON004',
-    iconClass: 'text-success',
-    roleIcon: 'ri-coin-line',
-    currency: 'USDT',
-    status: 'cancelled'
+    header: 'Actions',
+    accessor: 'action'
   }
 ]
 
-const ManageWithdrawalsTable = () => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+const WithdrawalListPage = async () => {
+  const query: Prisma.WithdrawalWhereInput = {}
 
-  const openModal = () => setIsModalOpen(true)
-  const closeModal = () => setIsModalOpen(false)
+  const [data, count] = await prisma.$transaction([
+    prisma.withdrawal.findMany({
+      where: query,
+      include: {
+        user: true
+      }
+    }),
+    prisma.withdrawal.count({
+      where: query
+    })
+  ])
+  console.log(data)
+
   return (
     <Card>
-      <Typography variant='h5' className='p-4 font-bold'>
-        Withdrawals History
+      <Typography variant='h5' className='m-3 font-bold'>
+        Manage Withdrawals
       </Typography>
 
       <div className='overflow-x-auto'>
-        <table className={tableStyles.table}>
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Amount</th>
-              <th>Wallet Address</th>
-              <th>Crypto Currency</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rowsData.map((row, index) => (
-              <tr key={index}>
-                <td className='!plb-1'>
-                  <div className='flex items-center gap-3'>
-                    <CustomAvatar src={row.avatarSrc} size={34} />
-                    <div className='flex flex-col'>
-                      <Typography color='text.primary' className='font-medium'>
-                        {row.name}
-                      </Typography>
-                      <Typography variant='body2'>{row.username}</Typography>
-                    </div>
-                  </div>
-                </td>
-                <td className='!plb-1'>
-                  <Typography>{row.amount}</Typography>
-                </td>
-                <td className='!plb-1'>
-                  <Typography>{row.address}</Typography>
-                </td>
-                <td className='!plb-1'>
-                  <div className='flex gap-2'>
-                    <i className={classnames(row.roleIcon, row.iconClass, 'text-[22px]')} />
-                    <Typography color='text.primary'>{row.currency}</Typography>
-                  </div>
-                </td>
-                <td className='!pb-1'>
-                  <Chip
-                    className='capitalize'
-                    variant='tonal'
-                    color={row.status === 'pending' ? 'warning' : row.status === 'cancelled' ? 'error' : 'success'}
-                    label={row.status}
-                    size='small'
-                  />
-                </td>
-                <td className='!plb-1'>
-                  <IconButton>
-                    <i className='ri-delete-bin-line text-error' onClick={openModal} />
-                  </IconButton>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <Table columns={columns} renderRow={renderRow} data={data} />
       </div>
-      <Modal isOpen={isModalOpen} onClose={closeModal} />
     </Card>
   )
 }
 
-export default ManageWithdrawalsTable
+const renderRow = (item: WithdrawalList) => (
+  console.log(item), // Check the structure of item
+  (
+    <tr key={item.id}>
+      <td className='!plb-1'>
+        <div className='flex items-center gap-3'>
+          <div className='flex flex-col'>
+            <Typography color='text.primary' className='font-medium'>
+              {item.user.firstName + ' ' + item.user.lastName}
+            </Typography>
+          </div>
+        </div>
+      </td>
+      <td className='!plb-1'>
+        <Typography>{item.amount}</Typography>
+      </td>
+      <td className='!plb-1'>
+        <div className='flex gap-2'>
+          {/* <i className={classnames(row.roleIcon, row.iconClass, 'text-[22px]')} /> */}
+          <Typography color='text.primary'>{item.cryptocurrency}</Typography>
+        </div>
+      </td>
+      <td className='!plb-1'>
+        <div className='flex gap-2'>
+          {/* <i className={classnames(row.roleIcon, row.iconClass, 'text-[22px]')} /> */}
+          <Typography color='text.primary'>{item.walletAddress}</Typography>
+        </div>
+      </td>
+      <td className='!plb-1'>
+        <div className='flex gap-2'>
+          {/* <i className={classnames(row.roleIcon, row.iconClass, 'text-[22px]')} /> */}
+          <Typography color='text.primary'> {new Intl.DateTimeFormat('en-US').format(item.dateTime)}</Typography>
+        </div>
+      </td>
+      <td className='!pb-1'>
+        <Chip
+          className='capitalize'
+          variant='tonal'
+          color={
+            item.status === 'pending'
+              ? 'warning'
+              : item.status === 'accepted'
+                ? 'success'
+                : item.status === 'cancelled'
+                  ? 'error'
+                  : 'default'
+          }
+          label={item.status}
+          size='small'
+        />
+      </td>
+      <td className='!plb-1'>
+        <a href='/list/users/edit-user'>
+          <i className={classnames('ri-edit-line', 'text-[20px] text-info mr-5')} />
+        </a>
+
+        <i className={classnames('ri-delete-bin-line', 'text-[18px] text-error')} />
+      </td>
+    </tr>
+  )
+)
+
+export default WithdrawalListPage

@@ -81,14 +81,15 @@ enum DepositStatus {
 
 // Withdrawal model
 model Withdrawal {
-  id            Int      @id @default(autoincrement())
-  userId        Int
-  amount        Float
-  cryptocurrency String
-  status        WithdrawalStatus
-  dateTime      DateTime @default(now())
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  amount          Float
+  cryptocurrency   String
+  status          WithdrawalStatus
+  dateTime        DateTime @default(now())
+  walletAddress    String  // New field for wallet address
   
-  user          User     @relation(fields: [userId], references: [id])
+  user            User     @relation(fields: [userId], references: [id])
 }
 
 // Enum for withdrawal status
